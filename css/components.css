@@ -450,7 +450,7 @@
   .price-card--featured:hover { transform: scale(1.03) translateY(-4px); }
 }
 .price-card__price-value {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: 3rem;
   font-weight: 700;
   color: var(--color-primary);
@@ -461,7 +461,6 @@
   vertical-align: top;
   margin-top: .4rem;
   display: inline-block;
-  font-family: var(--font-base);
 }
 .price-card__price-period { font-size: .85rem; color: black; }
 .price-card ul {
