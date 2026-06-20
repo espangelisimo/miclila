@@ -462,7 +462,7 @@
   margin-top: .4rem;
   display: inline-block;
 }
-.price-card__price-period { font-size: .85rem; color: black; }
+.price-card__price-period { font-size: .85rem; color: var(--color-text); }
 .price-card ul {
   text-align: left;
   margin-block: var(--space-6);
@@ -493,7 +493,7 @@
 .price-card p      { color: var(--color-text-muted); }
 .price-card li     { color: var(--color-text); }
 .price-card__price-value { color: var(--color-primary); }
-.price-card__price-period{ color: black; }
+.price-card__price-period{ color: var(--color-text); }
 
 /* ── Rating aggregate (antes de testimonios) ── */
 .rating-row {
@@ -1109,3 +1109,11 @@ textarea.form-control  { resize: vertical; min-height: 120px; }
 .trust-bar__rating-stars { display: flex; gap: 2px; }
 .trust-bar__rating-stars svg { width: 14px; height: 14px; fill: var(--color-accent); stroke: none; }
 @media (max-width: 768px) { .trust-bar__rating { border-left: none; padding-left: 0; } }
+
+/* ── Legal prose ── */
+.legal-prose h2 { font-size: 1.25rem; margin-top: var(--space-10); margin-bottom: var(--space-3); color: var(--color-heading); }
+.legal-prose h2:first-child { margin-top: 0; }
+.legal-prose h3 { font-size: 1rem; font-weight: 600; margin-top: var(--space-6); margin-bottom: var(--space-2); color: var(--color-heading); }
+.legal-prose p { margin-bottom: var(--space-4); line-height: 1.75; color: var(--color-text); }
+.legal-prose ul { margin: 0 0 var(--space-4) var(--space-6); }
+.legal-prose ul li { margin-bottom: var(--space-2); line-height: 1.7; color: var(--color-text); list-style: disc; }

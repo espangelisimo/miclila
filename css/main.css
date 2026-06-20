@@ -21,6 +21,7 @@
   --color-border-light:        #E8E3DB;
   --color-success:             #2D8B5A;
   --color-error:               #B83232;
+  --color-text-dark:           #000000;
 
   --font-sans:    'Inter', system-ui, -apple-system, sans-serif;
   --font-display: 'Playfair Display', Georgia, serif;
