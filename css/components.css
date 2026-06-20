@@ -44,7 +44,7 @@
 .navbar__logo-mark {
   width: 36px;
   height: 36px;
-  background: linear-gradient(135deg, var(--color-secondary), var(--color-accent));
+  background: none;
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
@@ -190,10 +190,10 @@
 .hero__bg {
   position: absolute;
   inset: 0;
-  background-image: url('assets/img/hero-bg.webp');
+  background-image: url('../assets/img/hero-bg.webp');
   background-size: cover;
   background-position: center 30%;
-  opacity: .15;
+  opacity: .2;
   width: 100%;
 }
 .hero__overlay {
@@ -443,14 +443,14 @@
 }
 .price-card--featured {
   border-color: var(--color-accent);
-  background: linear-gradient(to bottom, rgba(200,151,58,.10), var(--color-surface));
+  background: linear-gradient(to bottom, rgba(194, 149, 0, 0.753), var(--color-surface));
 }
 @media (min-width: 641px) {
   .price-card--featured { transform: scale(1.03); }
   .price-card--featured:hover { transform: scale(1.03) translateY(-4px); }
 }
 .price-card__price-value {
-  font-family: var(--font-display);
+  font-family: var(--font-sans);
   font-size: 3rem;
   font-weight: 700;
   color: var(--color-primary);
@@ -461,8 +461,9 @@
   vertical-align: top;
   margin-top: .4rem;
   display: inline-block;
+  font-family: var(--font-base);
 }
-.price-card__price-period { font-size: .85rem; color: var(--color-text-muted); }
+.price-card__price-period { font-size: .85rem; color: black; }
 .price-card ul {
   text-align: left;
   margin-block: var(--space-6);
@@ -493,7 +494,7 @@
 .price-card p      { color: var(--color-text-muted); }
 .price-card li     { color: var(--color-text); }
 .price-card__price-value { color: var(--color-primary); }
-.price-card__price-period{ color: var(--color-text-muted); }
+.price-card__price-period{ color: black; }
 
 /* ── Rating aggregate (antes de testimonios) ── */
 .rating-row {
