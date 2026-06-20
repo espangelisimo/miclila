@@ -1,10 +1,9 @@
 /* ============================================================
-   CLINILAB PASTOR — Main JS
+   CLINILAB PASTOR — Main JS v2
    ============================================================ */
 
-/* ── Navbar scroll behavior ── */
+/* ── Navbar: transparente en hero, sólido al hacer scroll ── */
 const navbar = document.querySelector('.navbar');
-// Solo modo transparente en la home, donde el hero ocupa toda la pantalla
 const hasFullHero = !!document.querySelector('.hero');
 
 function updateNavbar() {
@@ -20,25 +19,37 @@ function updateNavbar() {
 window.addEventListener('scroll', updateNavbar, { passive: true });
 updateNavbar();
 
-/* ── Mobile menu toggle ── */
+/* ── Menú móvil ── */
 const toggle = document.querySelector('.navbar__toggle');
 if (toggle) {
   toggle.addEventListener('click', () => {
-    navbar.classList.toggle('navbar--open');
-    const isOpen = navbar.classList.contains('navbar--open');
+    const isOpen = navbar.classList.toggle('navbar--open');
     toggle.setAttribute('aria-expanded', isOpen);
     document.body.style.overflow = isOpen ? 'hidden' : '';
   });
-  // Close on outside click
+
+  /* Cerrar al hacer clic fuera */
   document.addEventListener('click', (e) => {
     if (navbar.classList.contains('navbar--open') && !navbar.contains(e.target)) {
       navbar.classList.remove('navbar--open');
+      toggle.setAttribute('aria-expanded', 'false');
       document.body.style.overflow = '';
     }
   });
+
+  /* Cerrar al pulsar un enlace del menú móvil */
+  navbar.querySelectorAll('.navbar__link, .navbar__dropdown-link').forEach(link => {
+    link.addEventListener('click', () => {
+      if (navbar.classList.contains('navbar--open')) {
+        navbar.classList.remove('navbar--open');
+        toggle.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      }
+    });
+  });
 }
 
-/* ── Active nav link ── */
+/* ── Enlace activo en la navbar ── */
 (function markActiveLink() {
   const path = window.location.pathname.replace(/\/$/, '') || '/index.html';
   document.querySelectorAll('.navbar__link, .navbar__dropdown-link').forEach(a => {
@@ -51,25 +62,33 @@ if (toggle) {
 
 /* ── Scroll reveal ── */
 if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
-  const observer = new IntersectionObserver((entries) => {
+  const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
+        revealObserver.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 }
 
 /* ── FAQ accordion ── */
 document.querySelectorAll('.faq-question').forEach(btn => {
   btn.addEventListener('click', () => {
-    const item = btn.closest('.faq-item');
+    const item   = btn.closest('.faq-item');
     const isOpen = item.classList.contains('open');
-    // Close all
-    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
-    if (!isOpen) item.classList.add('open');
+    /* Cierra todos */
+    document.querySelectorAll('.faq-item.open').forEach(i => {
+      i.classList.remove('open');
+      i.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+    });
+    /* Abre el actual si estaba cerrado */
+    if (!isOpen) {
+      item.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
+    }
   });
 });
 
@@ -78,7 +97,7 @@ document.querySelectorAll('.faq-question').forEach(btn => {
   const banner = document.getElementById('cookieBanner');
   if (!banner) return;
   if (!localStorage.getItem('cookiesAccepted')) {
-    setTimeout(() => banner.classList.add('visible'), 1200);
+    setTimeout(() => banner.classList.add('visible'), 1400);
   }
   document.getElementById('cookieAccept')?.addEventListener('click', () => {
     localStorage.setItem('cookiesAccepted', '1');
@@ -90,13 +109,57 @@ document.querySelectorAll('.faq-question').forEach(btn => {
   });
 })();
 
-/* ── Smooth anchor scroll with offset ── */
+/* ── Mini-formulario captación ── */
+(function initMiniForm() {
+  const form = document.getElementById('mini-form');
+  if (!form) return;
+  const successDiv = document.getElementById('mini-form-success');
+
+  function validateField(input, testFn) {
+    const group = input.closest('.form-group') || input.closest('.form-check');
+    const errorEl = document.getElementById(input.id + '-error');
+    const ok = testFn(input.value.trim());
+    input.classList.toggle('error', !ok);
+    input.classList.toggle('success', ok);
+    if (group) group.classList.toggle('has-error', !ok);
+    if (errorEl) errorEl.style.display = ok ? 'none' : 'block';
+    return ok;
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const nombre   = form.querySelector('#mini-nombre');
+    const telefono = form.querySelector('#mini-telefono');
+    const rgpd     = form.querySelector('#mini-rgpd');
+    const rgpdErr  = document.getElementById('mini-rgpd-error');
+
+    const v1 = validateField(nombre,   v => v.length >= 2);
+    const v2 = validateField(telefono, v => /^[\d\s+\-()٠-٩]{9,}$/.test(v));
+    const v3 = rgpd.checked;
+    if (rgpdErr) rgpdErr.style.display = v3 ? 'none' : 'block';
+
+    if (v1 && v2 && v3 && successDiv) {
+      form.style.display = 'none';
+      successDiv.style.display = 'block';
+    }
+  });
+
+  ['#mini-nombre', '#mini-telefono'].forEach(sel => {
+    const el = form.querySelector(sel);
+    if (el) el.addEventListener('blur', () => el.dispatchEvent(new Event('change')));
+  });
+})();
+
+/* ── Anchor scroll con offset de navbar ── */
 document.querySelectorAll('a[href^="#"]').forEach(a => {
   a.addEventListener('click', e => {
     const target = document.querySelector(a.getAttribute('href'));
     if (!target) return;
     e.preventDefault();
-    const offset = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-height'), 10) || 72;
+    const offset = parseInt(
+      getComputedStyle(document.documentElement).getPropertyValue('--nav-height'),
+      10
+    ) || 72;
     window.scrollTo({ top: target.offsetTop - offset - 16, behavior: 'smooth' });
   });
 });
